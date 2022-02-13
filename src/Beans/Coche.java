@@ -27,13 +27,14 @@ public class Coche implements Serializable, PropertyChangeListener {
     public void propertyChange(PropertyChangeEvent evt) {
 
         if (evt.getPropertyName().equals("CocheVendido")) {
+   
             System.out.println(
             "Se ha vendido el coche con matrícula: " + evt.getNewValue() + "\n"
                     + "Información del vehículo: " + "\n"
                     + "Marca: " + marca + "\n"
                     + "Modelo: " + modelo + "\n"
-                    + "Precio: " + precio + "€");
-            setVendido(true);
+                    + "Precio: " + precio + " €");
+                   setVendido(true);
         }
     }
 
