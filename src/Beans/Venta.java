@@ -9,7 +9,9 @@ public class Venta implements Serializable {
     private String matricula;
     private PropertyChangeSupport propertySupport;
 
-    public Venta() { propertySupport = new PropertyChangeSupport(this); }
+    public Venta() {
+        propertySupport = new PropertyChangeSupport(this);
+    }
 
     public Venta(int idVenta, String matricula) {
         this.idVenta = idVenta;
@@ -28,19 +30,24 @@ public class Venta implements Serializable {
     public void setIdVenta(int idVenta) {
         this.idVenta = idVenta;
     }
+
     public int getIdVenta() {
         return idVenta;
     }
-    public void setMatricula(String nuevaMatricula) {
-        if (!nuevaMatricula.equals(this.matricula)) {
-            String matriculaAntigua = this.matricula;
-            String matriculaActual = nuevaMatricula;
+
+    //Método Setter que lanzará el evento
+    public void setMatricula(String matriculaActual) {
+        if (!matriculaActual.equals(this.matricula)) {
+            String valorAntiguo = this.matricula;
+            this.matricula = matriculaActual;
+            //Se dispara el evento "CocheVendido:"
             propertySupport.firePropertyChange("CocheVendido", 
-                            matriculaAntigua, matriculaActual);
+                    valorAntiguo, matriculaActual);
         } else {
-            this.matricula = nuevaMatricula;
+            this.matricula = matriculaActual;
         }
     }
+
     public String getMatricula() {
         return matricula;
     }

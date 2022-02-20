@@ -12,6 +12,8 @@ public class Concesionario {
     private String password;
 
     public Concesionario() {
+
+        //Ruta, username y password de la base de datos
         pathBDOO = "BDConcesionario.neodatis";
         username = "admin";
         password = "f546ad4f";
@@ -20,6 +22,7 @@ public class Concesionario {
     public ODB conectarDB() {
         ODB odb = null;
         try {
+            //Creación de la base de datos
             odb = ODBFactory.open(pathBDOO, username, password);
         } catch (ODBAuthenticationRuntimeException e) {
             if (odb != null && !odb.isClosed()) {
@@ -47,26 +50,29 @@ public class Concesionario {
     }
 
     public static void main(String[] args) {
+
         Concesionario concesionario = new Concesionario();
         //Creación del concesionario:
         concesionario.crearConcesionario();
-        
+
         //Conexión con la BD:
         ODB odb = concesionario.conectarDB();
 
-        // Consultar un coche de la BD y obtener su matrícula. 
-        IQuery consulta = new CriteriaQuery(Coche.class);//, Where.equal("matricula", "8542HRT")
+        //Se consulta un Coche de la BD. En este ejemplo se obtiene el coche cuyo modelo es "Focus": 
+        IQuery consulta = new CriteriaQuery(Coche.class, Where.equal("modelo", "Focus"));
         Coche coche = (Coche) odb.getObjects(consulta).getFirst();
-        String matriculaCocheObtenido = coche.getMatricula();
-                
-        // Crear una nueva Venta y asociarla a ese Coche, modificando la matrícula de la venta con la del coche.
+
+        // Matricula del Coche obtenido de la BD
+        String matriculaCocheBD = coche.getMatricula();
+
+        // Se crea una nueva Venta con la matricula del Coche obtenido de la BD
+        // y se asocia el emisor con el receptor:
         Venta venta = new Venta();
         venta.addPropertyChangeListener(coche);
-        venta.setMatricula(matriculaCocheObtenido);//coche.getMatricula()
+        venta.setMatricula(matriculaCocheBD);
 
-        // Al hacer esto debe recibir el evento el coche y poner su atributo vendido a true.
-        // >>> (ya lo pone VENDIDO a TRUE en la propia clase)
-        // Se debe volver a almacenar el Coche vendido en la BD.
+        //En este momento el atributo "Vendido" del coche pasa a TRUE
+        // Y tras realizar ese cambio se vuelve a almacenar en la BD.
         odb.store(coche);
         odb.close();
     }
